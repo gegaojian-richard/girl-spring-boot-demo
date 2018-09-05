@@ -1,8 +1,10 @@
 package com.gegaojian.girl.controller;
 
 import com.gegaojian.girl.domain.Girl;
+import com.gegaojian.girl.domain.Result;
 import com.gegaojian.girl.repository.GirlRepository;
 import com.gegaojian.girl.service.GirlService;
+import com.gegaojian.girl.utils.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +36,13 @@ public class GirlController {
      * @return
      */
     @PostMapping(value = "/addgirl")
-    public Girl girlAdd(@Valid Girl girl, BindingResult bindingResult){
+    public Result<Girl> girlAdd(@Valid Girl girl, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            System.out.println(bindingResult.getFieldError().getDefaultMessage());
             return null;
+//            return ResultUtil.error(1, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        return girlRepository.save(girl);
+        return ResultUtil.success(girlRepository.save(girl));
     }
 
     /**
@@ -94,5 +96,10 @@ public class GirlController {
     @PostMapping(value = "/addtwo")
     public void girlAddTwo(){
         girlService.addTwo();
+    }
+
+    @GetMapping(value = "/girls/getage/{id}")
+    public Result<Girl> getAge(@PathVariable(value = "id") Integer id){
+        return ResultUtil.success(girlService.getAge(id));
     }
 }
